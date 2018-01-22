@@ -1,0 +1,53 @@
+---
+# apimgtdb Queries
+- name: Excuting Query apimgtdb | mysql
+  mysql_db:
+    state: import
+    name: apimgtdb
+    target: "{{ API_Home }}/dbscripts/apimgt/mysql.sql"
+  when: ansible_distribution_major_version == '7'
+
+- name: Excuting Query in apimgtdb | mysql 5.7
+  mysql_db:
+    state: import
+    name: apimgtdb
+    target: "{{ API_Home }}/dbscripts/apimgt/mysql5.7.sql"
+  when: ansible_os_family == 'Debian'
+
+#userdb queries
+- name: Excuting Query in userdb | mysql
+  mysql_db:
+    state: import
+    name: userdb
+    target: "{{ API_Home }}/dbscripts/mysql.sql"
+  when: ansible_distribution_major_version == '7'
+
+- name: Excuting Query in userdb | mysql 5.7
+  mysql_db:
+    state: import
+    name: userdb
+    target: "{{ API_Home }}/dbscripts/mysql5.7.sql"
+  when: ansible_os_family == 'Debian'
+
+#regdb queries
+- name: Excuting Query in regdb | mysql 
+  mysql_db:
+    state: import
+    name: regdb
+    target: "{{ API_Home }}/dbscripts/mysql.sql"
+  when: ansible_distribution_major_version == '7'
+
+
+- name: Excuting Query in regdb | mysql 5.7
+  mysql_db:
+    state: import
+    name: regdb
+    target: "{{ API_Home }}/dbscripts/mysql5.7.sql"
+  when: ansible_os_family == 'Debian'
+
+#mbstoredb queries
+- name: Excuting Query in mbstoredb
+  mysql_db:
+    state: import
+    name: mbstoredb
+    target: "{{ API_Home }}/dbscripts/mb-store/mysql-mb.sql"

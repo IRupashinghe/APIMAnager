@@ -1,0 +1,55 @@
+---
+- name: "Installing unzip"
+  yum: "name=unzip state=latest"
+  when: ansible_os_family == 'RedHat'
+
+- name: "Installing unzip"
+  apt: "pkg=unzip state=latest"
+  when: ansible_os_family == 'Debian'
+
+- name: Creating App user
+  user:
+    name: "{{ app_user }}"
+    shell: /bin/bash
+
+- name: Set up multiple authorized keys
+  authorized_key:
+    user: "{{ app_user }}"
+    state: present
+    key: "{{ lookup('file', '{{ key_pub }}') }}"
+
+- name: Copy the PEM file
+  copy: src="{{ key_piv }}" dest=~/.ssh/ owner="{{ app_user }}" group="{{ app_user }}" mode=0600
+
+- name: "Making the Home Path"
+  file: dest=/opt/API mode=0775 owner="{{ app_user }}" group="{{ app_user }}" state=directory
+
+- name: "Downloading the API package and Unzip"
+  unarchive:
+    src: https://s3.amazonaws.com/teraesb/wso2am-2.1.0.zip
+    dest: /opt/API
+    remote_src: yes
+    owner: "{{ app_user }}" 
+    group: "{{ app_user }}"
+
+- name: "Making the Product home path | Debian"
+  blockinfile:
+    path: ~/.bashrc
+    block: |
+      export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+      export PATH=${JAVA_HOME}/bin:${PATH}
+      export API_HOME=/opt/API/wso2am-2.1.0
+      export PATH=${API_HOME}/bin:${PATH}
+    insertafter: EOF 
+  when: ansible_os_family == 'Debian'
+
+- name: "Making the Product home path | RedHat"
+  blockinfile:
+    path: ~/.bashrc
+    block: |
+      export JAVA_HOME=/usr/java/jdk1.8.0_162/jre
+      export PATH=${JAVA_HOME}/bin:${PATH}
+      export API_HOME=/opt/API/wso2am-2.1.0
+      export PATH=${API_HOME}/bin:${PATH}
+    insertafter: EOF 
+  when: ansible_os_family == 'RedHat'

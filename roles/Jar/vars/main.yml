@@ -1,0 +1,4 @@
+---
+# vars file for Jar
+API_Home: /opt/API/wso2am-2.1.0
+app_user: mitra

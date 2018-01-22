@@ -1,0 +1,14 @@
+
+{% if (ansible_distribution == "Red Hat Enterprise Linux") %}
+[nginx]
+name=nginx repo
+baseurl=http://nginx.org/packages/rhel/$releasever/$basearch/
+gpgcheck=0
+enabled=1
+{% elif (ansible_distribution == "CentOS") %}
+[nginx]
+name=nginx repo
+baseurl=http://nginx.org/packages/centos/$releasever/$basearch/
+gpgcheck=0
+enabled=1
+{% endif %}

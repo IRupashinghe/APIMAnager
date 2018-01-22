@@ -1,0 +1,5 @@
+---
+# vars file for EISetup
+app_user: mitra
+key_pub: /home/avantha/.ssh/id_rsa.pub
+key_piv: id_rsa

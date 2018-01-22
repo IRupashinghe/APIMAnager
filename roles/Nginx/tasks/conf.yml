@@ -1,0 +1,52 @@
+---
+- name: Remove default nginx vhost config file (if configured).
+  file:
+    path: "{{ nginx_default_vhost_path }}"
+    state: absent
+  notify: restart nginx
+
+- name: "Making the ssl Pathh"
+  file: dest={{ ssl_path }} mode=0775 owner=root group=root state=directory
+
+- name: Copy the AM Gateway worker http conf
+  template: src=amhttp.conf.j2 dest={{ am_conf_path }}/amhttp.conf owner="root" group="root" mode=0644
+  notify: reload nginx
+
+- name: Copy the AM Gateway worker https conf
+  template: src=amhttps.conf.j2 dest={{ am_conf_path }}/amhttps.conf owner="root" group="root" mode=0644
+  notify: reload nginx
+
+- name: Copy the AM Gateway Managment https conf
+  template: src=mgtamhttps.conf.j2 dest={{ am_conf_path }}/mgtamhttps.conf owner="root" group="root" mode=0644
+  notify: reload nginx
+
+# #Copying the Manager SSL
+# - name: Copy Manager Cert file
+#   copy: src=files/{{ mgt_crt }} dest={{ ssl_path }} owner="root" group="root" mode=0400
+
+# - name: Copy the Manager Key File
+#   copy: src={{ mgt_key }} dest={{ ssl_path }} owner="root" group="root" mode=0400
+
+
+
+- name: Generate an OpenSSL private key with a different size (2048 bits)
+  openssl_privatekey:
+    path: "{{ ssl_path }}/{{ ssl_key}}"
+    size: 2048
+
+- name: Generate an OpenSSL Certificate Signing Request
+  openssl_csr:
+    path: "{{ ssl_path }}/{{ ssl_csr}}"
+    privatekey_path: "{{ ssl_path }}/{{ ssl_key}}"
+    common_name: "{{ domain }}"
+    subject_alt_name: 'DNS:mgt.{{ domain }}'
+
+- name: Generate a Self Signed OpenSSL certificate
+  openssl_certificate:
+    path: "{{ ssl_path }}/{{ ssl_crt}}"
+    privatekey_path: "{{ ssl_path }}/{{ ssl_key}}"
+    csr_path: "{{ ssl_path }}/{{ ssl_csr}}"
+    provider: selfsigned
+
+
+    

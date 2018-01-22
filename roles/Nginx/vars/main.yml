@@ -1,0 +1,8 @@
+domain: mitra.am.com 
+domain_up: mitra.am.wso2.com 
+ssl_path: /etc/nginx/ssl
+ssl_crt: ssl.crt
+ssl_key: ssl.key
+ssl_csr: ssl.csr
+nginx_default_vhost_path: /etc/nginx/sites-enabled/default
+am_conf_path: /etc/nginx/conf.d

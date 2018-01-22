@@ -1,0 +1,12 @@
+# Check and install MySQL packages
+
+- name: Ensure MySQL packages are installed.
+  yum: "name={{ item }} state=installed update_cache=yes"
+  with_items: "{{ mysql_packages }}"
+  notify: restart mysql
+  tags: setup
+  
+- name: Ensure MySQL Python libraries are installed.
+  yum: "name={{ mysql_driver }} state=installed update_cache=yes"
+  tags: setup
+

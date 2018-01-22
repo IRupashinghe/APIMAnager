@@ -1,0 +1,43 @@
+---
+# tasks file for nginx_server
+
+# Check and install nginxpackages
+- name: Check if nginxis already installed.
+  stat: path=/etc/init.d/nginx
+  register: nginx_installed
+  tags: setup
+
+- name: Adding the Nginx Repo | ReHat
+  template: src=nginx.repo.j2 dest=/etc/yum.repos.d/nginx.repo owner="root" group="root" mode=0644
+  when: nginx_installed.stat.exists == false and ansible_os_family == 'RedHat'
+  tags: setup
+
+- name: Update apt cache if nginxis not yet installed | Debian
+  apt: update_cache=yes
+  when: nginx_installed.stat.exists == false and ansible_os_family == 'Debian'
+  tags: setup
+
+- name: Update yum cache if nginxis not yet installed | RedHat
+  yum: update_cache=yes
+  when: nginx_installed.stat.exists == false and ansible_os_family == 'RedHat'
+  tags: setup
+
+- name: Ensure Nginx packages are installed | Debian
+  apt: "name=nginx state=installed"
+  when: nginx_installed.stat.exists == false and ansible_os_family == 'Debian'
+  tags: setup
+
+- name: Ensure openssl Python libraries are installed. | Debian
+  apt: "name=python-service-identity state=installed"
+  when: nginx_installed.stat.exists == false and ansible_os_family == 'Debian'
+  tags: setup
+
+- name: Ensure nginxpackages are installed | RedHat
+  yum: "name=nginx state=installed"
+  when: nginx_installed.stat.exists == false and ansible_os_family == 'RedHat'
+  tags: setup
+
+# - name: Ensure nginx is started and enabled to start at boot.
+#   service: name=nginx state=started enabled=yes
+
+- import_tasks: conf.yml

@@ -1,0 +1,27 @@
+upstream mgt.{{ domain}} {
+    {% for host in groups['gateway_Manager'] %}
+    {% set mgt_ip = hostvars[host]['ansible_eth0']['ipv4']['address'] %}
+    server {{ mgt_ip}}:9443;
+    {% endfor %}
+    ip_hash;   
+}
+ 
+ 
+server {
+    listen 443;
+    server_name mgt.{{ domain }};
+    ssl on;
+    ssl_certificate {{ssl_path}}/{{ssl_crt}};
+    ssl_certificate_key {{ssl_path}}/{{ssl_key}};
+ 
+    location / {
+               proxy_set_header X-Forwarded-Host $host;
+               proxy_set_header X-Forwarded-Server $host;
+               proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+               proxy_set_header Host $http_host;
+               proxy_read_timeout 5m;
+               proxy_pass https://mgt.{{ domain }};
+        }
+    error_log  /var/log/nginx/mgt-error.log ;
+    access_log  /var/log/nginx/mgt-access.log;
+}
