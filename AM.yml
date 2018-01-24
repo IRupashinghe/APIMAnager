@@ -1,6 +1,11 @@
 --- 
 - hosts: api
   gather_facts: no
+  pre_tasks:
+  - name: Define port offset 
+    set_fact:
+      port_offset: true
+    when: role | length > 1
   tasks:
     - setup:
 
@@ -19,7 +24,6 @@
   become_user: root
   roles:
       - Publisher_ClusterSetup
-      - Publisher_DbSetup
 
 - hosts: store_cluster
   gather_facts: no
@@ -27,7 +31,6 @@
   become_user: root
   roles:
       - Store_ClusterSetup
-      - Store_DbSetup
 
 
 - hosts: keyManager_cluster
@@ -35,14 +38,21 @@
   become: true
   become_user: root
   roles:
-      - KeyManager_DbSetup
+      - KeyManager_ClusterSetup
 
 - hosts: traficManager_cluster
   gather_facts: no
   become: true
   become_user: root
   roles:
-      - KeyManager_DbSetup
+      - TraficManager_ClusterSetup
+
+- hosts: gateway_cluster
+  gather_facts: no
+  become: true
+  become_user: root
+  roles:
+      - Gateway_ClusterSetup
 
 
 # - hosts: dbservers
@@ -58,4 +68,4 @@
 #   become: true
 #   become_user: root
 #   roles:
-#       - Java8
+#       - Nginx
