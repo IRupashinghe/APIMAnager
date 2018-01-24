@@ -2,7 +2,9 @@
 - name: MySql Jar Downloading
   get_url:
     url:  https://s3.amazonaws.com/teraesb/mysql-connector-java-5.1.45-bin.jar
-    dest: "{{ API_Home}}/repository/components/lib"
+    dest: "{{ API_Home}}_{{ item }}/wso2am-2.1.0/repository/components/lib"
     owner: "{{ app_user }}" 
     group: "{{ app_user }}"
     mode: 0740
+  with_items:
+    - "{{ role }}"

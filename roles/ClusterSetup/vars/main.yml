@@ -1,5 +1,0 @@
-pubStore_domain: mitra.pub.store.com 
-gateway_domain: mitra.am.com 
-doc_root: /opt/API/wso2am-2.1.0
-app_user: mitra
-key_piv: ~/.ssh/id_rsa

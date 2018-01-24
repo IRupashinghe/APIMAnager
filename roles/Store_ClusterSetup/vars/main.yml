@@ -1,0 +1,8 @@
+pubStore_domain: mitra.pub.store.com 
+doc_root: /opt/API_Store/wso2am-2.1.0
+app_user: mitra
+local_port: 4100
+offset: 1 
+db_host: 172.31.12.128
+db_user: apiadmin
+db_pass: apiadmin

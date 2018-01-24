@@ -22,15 +22,36 @@
   copy: src="{{ key_piv }}" dest=~/.ssh/ owner="{{ app_user }}" group="{{ app_user }}" mode=0600
 
 - name: "Making the Home Path"
-  file: dest=/opt/API mode=0775 owner="{{ app_user }}" group="{{ app_user }}" state=directory
+  file: dest=/opt/API_{{ item }} mode=0775 owner="{{ app_user }}" group="{{ app_user }}" state=directory
+  with_items:
+    - "{{ role }}"
+
+# - name: "Making the Home Path for Publisher"
+#   file: dest=/opt/API/Publisher mode=0775 owner="{{ app_user }}" group="{{ app_user }}" state=directory
+#   when: role == "Publisher"
+
+
+# - name: "Making the Home Path for Store"
+#   file: dest=/opt/API/Store mode=0775 owner="{{ app_user }}" group="{{ app_user }}" state=directory
+#   when: role == "Store"
 
 - name: "Downloading the API package and Unzip"
   unarchive:
     src: https://s3.amazonaws.com/teraesb/wso2am-2.1.0.zip
-    dest: /opt/API
+    dest: /opt/API_{{ item }}
     remote_src: yes
     owner: "{{ app_user }}" 
     group: "{{ app_user }}"
+  with_items:
+    - "{{ role }}"
+
+- name: Define API_Home
+  set_fact:
+    API_Home: "/opt/API_{{ item }}/wso2am-2.1.0"
+  when: API_Home is not defined
+  with_items:
+    - "{{ role }}"
+
 
 - name: "Making the Product home path | Debian"
   blockinfile:
@@ -38,7 +59,7 @@
     block: |
       export JAVA_HOME=/usr/lib/jvm/java-8-oracle
       export PATH=${JAVA_HOME}/bin:${PATH}
-      export API_HOME=/opt/API/wso2am-2.1.0
+      export API_HOME={{ API_Home }}
       export PATH=${API_HOME}/bin:${PATH}
     insertafter: EOF 
   when: ansible_os_family == 'Debian'
@@ -49,7 +70,7 @@
     block: |
       export JAVA_HOME=/usr/java/jdk1.8.0_162/jre
       export PATH=${JAVA_HOME}/bin:${PATH}
-      export API_HOME=/opt/API/wso2am-2.1.0
+      export API_HOME={{ API_Home }}
       export PATH=${API_HOME}/bin:${PATH}
     insertafter: EOF 
   when: ansible_os_family == 'RedHat'

@@ -1,4 +1,5 @@
 ---
+
 # apimgtdb Queries
 - name: Excuting Query apimgtdb | mysql
   mysql_db:

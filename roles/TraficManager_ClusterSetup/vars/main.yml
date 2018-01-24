@@ -1,0 +1,7 @@
+pubStore_domain: mitra.pub.store.com 
+doc_root: /opt/API_TraficManager/wso2am-2.1.0/
+app_user: mitra
+offset: 0
+db_host: 172.31.12.128
+db_user: apiadmin
+db_pass: apiadmin

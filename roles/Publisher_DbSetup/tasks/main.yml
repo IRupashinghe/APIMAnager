@@ -1,0 +1,18 @@
+--- 
+  - name: Copy the master-datasources.xml 
+    template: src=master-datasources.xml.j2 dest={{ doc_root }}/repository/conf/datasources/master-datasources.xml owner="{{ app_user }}" group="{{ app_user }}" mode=0644
+
+  - name: Copy the user-mgt.xml
+    template: src=user-mgt.xml.j2 dest={{ doc_root }}/repository/conf/user-mgt.xml owner="{{ app_user }}" group="{{ app_user }}" mode=0644
+
+
+  - name: Copy the registry.xml
+    template: src=registry.xml.j2 dest={{ doc_root }}/repository/conf/registry.xml owner="{{ app_user }}" group="{{ app_user }}" mode=0644
+
+  
+  - name: "Adding Remote instance URL"
+    blockinfile:
+      path: /etc/hosts
+      block: |
+        127.0.0.1 publisher.apim-wso2.com
+      insertafter: EOF 

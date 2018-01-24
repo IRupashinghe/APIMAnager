@@ -12,13 +12,17 @@ ansible_user=ec2-user
 ansible_user=ubuntu
 
 [gateway_cluster:vars]
-role=Gateway
+role=['Gateway']
+offset=[0]
 
 [keyManager_cluster:vars]
-role=KeyManager
+role=['KeyManager']
 
-[pubStore_cluster:vars]
-role=PubStore
+[pubstore_cluster:vars]
+role=['Publisher','Store']
+
+[traficManager_cluster:vars]
+role=['TraficManager']
 
 
 [gateway_Worker:vars]
@@ -33,12 +37,19 @@ subrole=mgt
 [gateway_Manager]
 52.66.148.86
 
-[pubStore_cluster]
+[publisher_cluster]
+13.127.106.6
+13.127.82.21
+
+[store_cluster]
 13.127.106.6
 13.127.82.21
 
 [keyManager_cluster]
 13.127.97.51
+
+[traficManager_cluster]
+13.126.138.133
 
 [dbservers]
 13.127.119.184
@@ -46,14 +57,20 @@ subrole=mgt
 [nginx]
 13.126.131.192
 
+
 [gateway_cluster:children]
 gateway_Worker
 gateway_Manager
 
+[pubstore_cluster:children]
+publisher_cluster
+store_cluster
+
 [cluster:children]
 gateway_cluster
-pubStore_cluster
+pubstore_cluster
 keyManager_cluster
+traficManager_cluster
 
 [api:children]
 cluster

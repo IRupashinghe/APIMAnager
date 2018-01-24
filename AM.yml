@@ -9,12 +9,42 @@
   become: true
   become_user: root
   roles:
-      # - Java8
-      # - APISetup
-      # - Jar
-      - ClusterSetup
-      - DbSetup
-      
+      - Java8
+      - APISetup
+      - Jar
+
+- hosts: publisher_cluster
+  gather_facts: no
+  become: true
+  become_user: root
+  roles:
+      - Publisher_ClusterSetup
+      - Publisher_DbSetup
+
+- hosts: store_cluster
+  gather_facts: no
+  become: true
+  become_user: root
+  roles:
+      - Store_ClusterSetup
+      - Store_DbSetup
+
+
+- hosts: keyManager_cluster
+  gather_facts: no
+  become: true
+  become_user: root
+  roles:
+      - KeyManager_DbSetup
+
+- hosts: traficManager_cluster
+  gather_facts: no
+  become: true
+  become_user: root
+  roles:
+      - KeyManager_DbSetup
+
+
 # - hosts: dbservers
 #   gather_facts: no
 #   become: true
@@ -28,4 +58,4 @@
 #   become: true
 #   become_user: root
 #   roles:
-#       - Nginx
+#       - Java8

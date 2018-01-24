@@ -1,0 +1,5 @@
+gateway_domain: mitra.am.com  
+doc_root: /opt/API_Gateway/wso2am-2.1.0
+app_user: mitra
+local_port: 4200
+offset: 0

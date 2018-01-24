@@ -1,0 +1,12 @@
+--- 
+  - name: Copy the master-datasources.xml 
+    template: src=master-datasources.xml.j2 dest={{ doc_root }}/repository/conf/datasources/master-datasources.xml owner="{{ app_user }}" group="{{ app_user }}" mode=0644
+
+  - name: Copy the user-mgt.xml
+    template: src=user-mgt.xml.j2 dest={{ doc_root }}/repository/conf/user-mgt.xml owner="{{ app_user }}" group="{{ app_user }}" mode=0644
+ 
+  - name: Copy the Axis2.xml
+    template: src=axis2.xml.j2 dest={{ doc_root }}/repository/conf/axis2/axis2.xml owner="{{ app_user }}" group="{{ app_user }}" mode=0644
+  
+  - name: Copy the api-manager.xml
+    template: src=api-manager.xml.j2 dest={{ doc_root }}/repository/conf/api-manager.xml owner="{{ app_user }}" group="{{ app_user }}" mode=0644
